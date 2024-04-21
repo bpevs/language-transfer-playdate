@@ -1,6 +1,6 @@
-name=Language Tranfer - Spanish
+name=Language Tranfer (Unofficial)
 author=bpev
-description=Unofficial Course Player for Language Transfer Spanish
-bundleID=com.bpev.language-transfer-spanish
+description=mp3 player for Language Transfer Courses
+bundleID=com.bpev.language-transfer
 version=1.1
 imagePath=SystemAssets

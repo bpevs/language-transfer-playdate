@@ -2,6 +2,7 @@ import 'CoreLibs/timer'
 
 import 'dynamicText'
 
+local fs            <const> = playdate.file
 local menu          <const> = playdate.getSystemMenu()
 local store         <const> = playdate.datastore.read()
 local timer         <const> = playdate.timer
@@ -9,39 +10,47 @@ local clock         <const> = DynamicText(200, 120, 'Mikodacs-Clock')
 local player        <const> = playdate.sound.fileplayer
 local sounds        <const> = {}
 local track         <const> = {}
-local tracks   = store and store.tracks or track[1]
 local isPaused      = true
 local isPlaying = true
 local activeTimer
 SoundManager = {}
 App = {}
 
+fs.mkdir("/courses/")
+
 for i=1, 90 do
-  track[i] = string.format("%02d",i)
+  track[i] = string.format("%02d", i or 1)
   SoundManager[track[i]] = [[Language Transfer - Complete Spanish - Lesson ]] .. track[i]
 end
 
+local tracks = store and store.tracks or track[1]
+
 for _, v in pairs(SoundManager) do
-    sounds[v] = player.new('Sounds/spanish/'..v)
+    sounds[v] = player.new('courses/spanish/'..v)
 end
 
 SoundManager.sounds = sounds
 
 function SoundManager:play(name)
-    self.sounds[name]:play(1)
+    if self.sounds[name] then self.sounds[name]:play(1) end
 end
 
 function SoundManager:pause(name)
-    self.sounds[name]:pause()
+    if self.sounds[name] then self.sounds[name]:pause() end
 end
 
 function SoundManager:stop(name)
-    self.sounds[name]:setOffset(0)
-    self.sounds[name]:pause()
+    if self.sounds[name] then
+        self.sounds[name]:setOffset(0)
+        self.sounds[name]:pause()
+    end
 end
 
 function SoundManager:getLength(name)
-    return math.ceil(self.sounds[name]:getLength())
+    if self.sounds[name] then
+        return math.ceil(self.sounds[name]:getLength())
+    end
+    return 0
 end
 
 -- private functions:
@@ -72,7 +81,7 @@ end
 
 local function resetPlayer()
     isPlaying = true
-    local trackNum = string.format("%02d",tracks)
+    local trackNum = string.format("%02d", tracks or 1)
     local len = SoundManager:getLength(SoundManager[trackNum])
 
     resetTimer(millisecondsFromSeconds(len))
@@ -105,7 +114,7 @@ end
 
 function App:setup()
     menu:addOptionsMenuItem('track', track, tracks, function(choice)
-        local trackNum = string.format("%02d",tracks)
+        local trackNum = string.format("%02d",tracks or 1)
         local len = SoundManager:stop(SoundManager[trackNum])
         tracks = choice
         changeInterval(resetPlayer)
@@ -155,7 +164,7 @@ end
 
 function App:resumeOrPause()
     isPaused = not isPaused
-    local trackNum = string.format("%02d",tracks)
+    local trackNum = string.format("%02d",tracks or 1)
     if isPaused then
         SoundManager:pause(SoundManager[trackNum])
         activeTimer:pause()
