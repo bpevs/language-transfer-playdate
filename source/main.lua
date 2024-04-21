@@ -1,7 +1,7 @@
-gfx    = playdate.graphics
+gfx = playdate.graphics
 sprite = gfx.sprite
 
-import 'app'
+import "app"
 
 App:setup()
 

@@ -1,4 +1,4 @@
-import 'CoreLibs/sprites'
+import "CoreLibs/sprites"
 
 --[[
     Usage:
@@ -7,15 +7,15 @@ import 'CoreLibs/sprites'
         txt:setContent('hello world')
         playdate.graphics.sprite.update()
 ]]
-class('DynamicText').extends(sprite)
+class("DynamicText").extends(sprite)
 
 function DynamicText:init(x, y, font)
     DynamicText.super.init(self)
 
-    self.font = gfx.font.new('Fonts/'..font)
+    self.font = gfx.font.new("Fonts/" .. font)
 
     self:moveTo(x, y)
-    self:setContent('')
+    self:setContent("")
     self:add()
 end
 
@@ -30,7 +30,7 @@ end
 
 function DynamicText:draw()
     gfx.pushContext()
-        gfx.setFont(self.font)
-        gfx.drawText(self.content, 0, 0)
+    gfx.setFont(self.font)
+    gfx.drawText(self.content, 0, 0)
     gfx.popContext()
 end
